@@ -44,86 +44,12 @@ const sidebarItem: menu[] = [
     icon: BrandTwitterIcon,
     to: '/pages/birdorders'
   },
-  // {
-  //   title: 'Bird spiecies',
-  //   icon: FeatherIcon,
-  //   to: '/pages/birds'
-  // },
   {
     title: 'Recycle Bin',
     icon: RecycleIcon,
     to: '/pages/recycle'
   },
-  {
-    title: 'Authentication',
-    icon: KeyIcon,
-    to: '/auth',
-    children: [
-      {
-        title: 'Login',
-        icon: CircleIcon,
-        to: '/auth/login'
-      },
-      {
-        title: 'Register',
-        icon: CircleIcon,
-        to: '/auth/register'
-      }
-    ]
-  },
-  {
-    title: 'Error 404',
-    icon: BugIcon,
-    to: '/pages/error'
-  },
-
   { divider: true },
-  // { header: 'Utilities' },
-  // {
-  //   title: 'Typography',
-  //   icon: TypographyIcon,
-  //   to: '/utils/typography'
-  // },
-  // {
-  //   title: 'Shadows',
-  //   icon: ShadowIcon,
-  //   to: '/utils/shadows'
-  // },
-  // {
-  //   title: 'Colors',
-  //   icon: PaletteIcon,
-  //   to: '/utils/colors'
-  // },
-
-  // {
-  //   title: 'Icons',
-  //   icon: WindmillIcon,
-  //   to: '/forms/radio',
-  //   children: [
-  //     {
-  //       title: 'Tabler Icons',
-  //       icon: CircleIcon,
-  //       to: '/icons/tabler'
-  //     },
-  //     {
-  //       title: 'Material Icons',
-  //       icon: CircleIcon,
-  //       to: '/icons/material'
-  //     }
-  //   ]
-  // },
-  // { divider: true },
-  // {
-  //   title: 'Sample Page',
-  //   icon: BrandChromeIcon,
-  //   to: '/starter'
-  // },
-  // {
-  //   title: 'Documentation',
-  //   icon: HelpIcon,
-  //   to: 'https://codedthemes.gitbook.io/berry-vuetify/',
-  //   type: 'external'
-  // }
 ];
 
 export default sidebarItem;

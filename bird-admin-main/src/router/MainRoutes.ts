@@ -32,7 +32,7 @@ const MainRoutes = {
       component: () => import('@/views/pages/BirdSpecie/BirdSpecie.vue')
     },
     {
-      name: 'Bird Specie Detail', 
+      name: 'Bird Specie Detail',
       path: '/pages/birdspecies/details/:specieId',
       component: () => import('@/views/pages/BirdSpecie/BirdSpecieDetail.vue'),
       props: true
@@ -81,6 +81,11 @@ const MainRoutes = {
       name: 'Colors',
       path: '/utils/colors',
       component: () => import('@/views/utilities/colors/ColorPage.vue')
+    },
+    {
+      name: "Search",
+      path: "/pages/search",
+      component: () => import("@/views/pages/search/Search.vue")
     }
   ]
 };

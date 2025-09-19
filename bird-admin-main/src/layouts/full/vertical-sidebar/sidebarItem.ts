@@ -1,17 +1,8 @@
 import {
-  CircleIcon,
-  WindmillIcon,
-  TypographyIcon,
-  ShadowIcon,
-  PaletteIcon,
-  KeyIcon,
-  BugIcon,
   DashboardIcon,
-  BrandChromeIcon,
-  HelpIcon,
   RecycleIcon,
-  FeatherIcon,
-  BrandTwitterIcon
+  BrandTwitterIcon,
+  SearchIcon
 } from 'vue-tabler-icons';
 
 export interface menu {
@@ -48,6 +39,11 @@ const sidebarItem: menu[] = [
     title: 'Recycle Bin',
     icon: RecycleIcon,
     to: '/pages/recycle'
+  },
+  {
+    title: 'Search',
+    icon: SearchIcon,
+    to: '/pages/search'
   },
   { divider: true },
 ];

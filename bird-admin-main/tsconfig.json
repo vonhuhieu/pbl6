@@ -1,0 +1,21 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "src/types/.d.ts"],
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "ignoreDeprecations": "5.0",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "vue": ["./node_modules/vue"]
+    },
+    "allowJs": true,
+    "types": ["vite/client", "vue"]
+  },
+  "references": [
+    {
+      "path": "./tsconfig.vite-config.json"
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "name": "crawler-server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "ts-node-dev --files src/index.ts",
+    "build": "tsc", 
+    "start": "node dist/index.js", 
+    "prod": "npm run build && npm start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@types/got": "^9.6.12",
+    "archiver": "^7.0.1",
+    "axios": "^1.7.7",
+    "cors": "^2.8.5",
+    "crawler-server": "file:",
+    "csv-parser": "^3.0.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "fs": "^0.0.1-security",
+    "fs-extra": "^11.2.0",
+    "image-size": "^1.1.1",
+    "lodash": "^4.17.21",
+    "node-fetch": "^2.7.0",
+    "pg": "^8.13.1",
+    "typeorm": "^0.3.20",
+    "typeorm-naming-strategies": "^4.1.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/archiver": "^6.0.3",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/fs-extra": "^11.0.4",
+    "@types/lodash": "^4.17.12",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.6.3"
+  }
+}

@@ -1,118 +1,189 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue'
+import axios from 'axios'
 
-const file = ref<File | null>(null);
-const preview = ref<string | null>(null);
-const result = ref<any>(null);
-const loading = ref(false);
+const file = ref<File | null>(null)
+const preview = ref<string | null>(null)
+const resultImage = ref<string | null>(null)
+const birdName = ref<string | null>(null)   // 🆕 Tên chim
+const loading = ref(false)
+const fileInput = ref<HTMLInputElement | null>(null)
+const pasteArea = ref<HTMLDivElement | null>(null)
+
+function setPreviewFromFile(f: File) {
+  file.value = f
+  preview.value = URL.createObjectURL(f)
+  if (fileInput.value) fileInput.value.value = ''
+}
 
 function onFileChange(e: Event) {
-  const target = e.target as HTMLInputElement;
+  const target = e.target as HTMLInputElement
   if (target.files && target.files[0]) {
-    file.value = target.files[0];
-    preview.value = URL.createObjectURL(file.value);
+    setPreviewFromFile(target.files[0])
   }
 }
 
-function onSubmit() {
-  if (!file.value) return;
-  loading.value = true;
-  result.value = null;
+// ✅ Dán ảnh từ clipboard
+function onPaste(e: ClipboardEvent) {
+  if (!e.clipboardData) return
+  for (const item of e.clipboardData.items) {
+    if (item.kind === 'file') {
+      const pastedFile = item.getAsFile()
+      if (pastedFile && pastedFile.type.startsWith('image/')) {
+        setPreviewFromFile(pastedFile)
+        break
+      }
+    }
+  }
+}
 
-  setTimeout(() => {
-    result.value = {
-      name: 'Chim Chào Mào',
-      scientific: 'Pycnonotus jocosus',
-      description:
-        'Loài chim hót phổ biến ở Việt Nam, thường được nuôi làm cảnh.',
-      habitat: 'Rừng cây, vườn, khu dân cư.'
-    };
-    loading.value = false;
-  }, 2000);
+onMounted(() => {
+  pasteArea.value?.addEventListener('paste', onPaste)
+})
+onBeforeUnmount(() => {
+  pasteArea.value?.removeEventListener('paste', onPaste)
+})
+
+async function onSubmit() {
+  if (!file.value) return
+  loading.value = true
+  resultImage.value = null
+  birdName.value = null
+
+  try {
+    const formData = new FormData()
+    formData.append('file', file.value)
+
+    // 🆕 API trả JSON chứ không phải blob
+    const response = await axios.post(
+      'https://apiflask.dinlaan.site/upload',
+      formData,
+      { headers: { 'Content-Type': 'multipart/form-data' } }
+    )
+
+    // Lấy tên chim
+    birdName.value = response.data.name_bird
+
+    // Chuyển base64 -> data URL
+    const base64 = response.data.image_base64
+    resultImage.value = `data:image/jpeg;base64,${base64}`
+  } catch (err) {
+    console.error(err)
+  } finally {
+    loading.value = false
+  }
 }
 </script>
 
 <template>
-  <div class="search-page">
-    <h1 class="title">Bird Search</h1>
-    <p class="subtitle">Upload ảnh để hệ thống phân tích loài chim</p>
+  <div class="big-box">
+    <!-- Upload -->
+    <div class="small-box">
+      <input
+        v-if="!preview"
+        type="file"
+        accept="image/*"
+        @change="onFileChange"
+        ref="fileInput"
+      />
 
-    <div class="upload-box">
-      <input type="file" accept="image/*" @change="onFileChange" />
+      <div
+        ref="pasteArea"
+        class="paste-zone"
+        :class="{ active: !preview }"
+        tabindex="0"
+      >
+        Click or paste here
+      </div>
+
       <div v-if="preview" class="preview">
         <img :src="preview" alt="preview" />
       </div>
     </div>
 
+    <!-- Kết quả -->
+    <div class="small-box">
+      <h3>Ảnh Kết Quả</h3>
+      <div v-if="resultImage" class="result-image">
+        <img :src="resultImage" alt="result" />
+        <p class="bird-name">🐦 {{ birdName }}</p>
+      </div>
+      <div v-else class="placeholder">Chưa có kết quả</div>
+    </div>
+  </div>
+
+  <div class="btn-wrap">
     <button class="submit-btn" @click="onSubmit" :disabled="!file || loading">
       <span v-if="!loading">Submit</span>
-      <span v-else class="loader"></span>
+<span v-else class="loader"></span>
     </button>
-
-    <div v-if="loading" class="loading-text">Đang phân tích...</div>
-
-    <div v-if="result" class="result">
-      <h2>Kết quả phân tích</h2>
-      <p><strong>Tên thường gọi:</strong> {{ result.name }}</p>
-      <p><strong>Tên khoa học:</strong> {{ result.scientific }}</p>
-      <p><strong>Mô tả:</strong> {{ result.description }}</p>
-      <p><strong>Môi trường sống:</strong> {{ result.habitat }}</p>
-    </div>
   </div>
 </template>
 
 <style scoped>
-.search-page {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 24px;
-  text-align: center;
-}
-
-.title {
-  font-size: 28px;
-  font-weight: bold;
-  margin-bottom: 8px;
-}
-
-.subtitle {
-  color: #666;
-  margin-bottom: 24px;
-}
-
-.upload-box {
-  border: 2px dashed #bbb;
-  padding: 20px;
+.big-box {
+  display: flex;
+  gap: 20px;
+  border: 2px solid #ccc;
   border-radius: 12px;
+  padding: 20px;
   margin-bottom: 20px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.small-box {
+  flex: 1;
+  border: 1px dashed #bbb;
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  background: #fafafa;
+  min-width: 250px;
+}
+.paste-zone {
+  margin-top: 12px;
+  padding: 12px;
+  border: 2px dashed #aaa;
+  border-radius: 8px;
+  color: #555;
   cursor: pointer;
 }
-
-.preview img {
+.paste-zone.active:hover {
+  border-color: #1976d2;
+}
+.preview img,
+.result-image img {
   max-width: 100%;
   margin-top: 12px;
   border-radius: 8px;
 }
-
+.bird-name {
+  margin-top: 10px;
+  font-weight: bold;
+  color: #1976d2;
+}
+.placeholder {
+  color: #888;
+  font-style: italic;
+  margin-top: 20px;
+}
+.btn-wrap {
+  text-align: center;
+  margin-top: 20px;
+}
 .submit-btn {
   background: #1976d2;
   color: white;
-  padding: 10px 20px;
+  padding: 12px 28px;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  margin-bottom: 20px;
   font-weight: bold;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
 }
-
 .submit-btn:disabled {
   background: #ccc;
   cursor: not-allowed;
 }
-
 .loader {
   border: 3px solid #f3f3f3;
   border-top: 3px solid white;
@@ -121,23 +192,8 @@ function onSubmit() {
   height: 18px;
   animation: spin 1s linear infinite;
 }
-
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
-}
-
-.loading-text {
-  margin-bottom: 20px;
-  font-style: italic;
-  color: #555;
-}
-
-.result {
-  text-align: left;
-  margin-top: 20px;
-  padding: 16px;
-  background: #f9f9f9;
-  border-radius: 8px;
 }
 </style>

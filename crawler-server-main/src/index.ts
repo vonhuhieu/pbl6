@@ -8,13 +8,13 @@ import { AppDataSource } from "./database/datasource";
 import { camelCaseMiddleware, snakeCaseMiddleware } from "./middleware/snakeCase";
 import birdRoutes from "./routes/birdImages.route";
 import birdSpeciesRoutes from "./routes/birdSpecies.route";
-import birdOrderRoute from "./routes/birdOrder.route";
 import birdFamilyRoutes from "./routes/birdFamily.route";
 import birdOrderRoutes from "./routes/birdOrder.route";
 import infoRoutes from "./routes/info.route";
 
 // Tạo ứng dụng Express
 const app = express();
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(camelCaseMiddleware);

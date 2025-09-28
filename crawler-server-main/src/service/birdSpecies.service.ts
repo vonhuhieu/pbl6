@@ -1,4 +1,4 @@
-import { IsNull, Not } from "typeorm";
+import { IsNull, Not, ILike } from "typeorm";
 import { NOT_FOUND } from "../constants/http";
 import { MessageConstant } from "../constants/messageConstant";
 import { AppDataSource } from "../database/datasource";
@@ -111,4 +111,22 @@ export const getTotalSpeciesPerFamilyId = async (familyId: string) => {
     total: speciesCount,
     birdFamilyName: birdFamily.name,
   };
+};
+
+export const getBirdSpeciesByName = async (name: string) => {
+  const species = await birdSpeciesRepository.find({
+    where: {
+      name: ILike(`%${name}%`),
+      deletedAt: IsNull(),
+    },
+    relations: ["imageBirds"],
+  });
+
+  appAssert(
+    species && species.length > 0,
+    NOT_FOUND,
+    MessageConstant.BIRD_SPECIES_NOT_FOUND
+  );
+
+  return species;
 };

@@ -8,6 +8,7 @@ import {
   getTotalSpecies,
   getTotalSpeciesPerFamily,
   updateBirdSpeciesHandler,
+  getBirdSpeciesByNameHandler,
 } from "../controller/birdSpecies.controller";
 
 const birdSpeciesRoutes = Router();
@@ -16,6 +17,8 @@ birdSpeciesRoutes.get(
   "/total-species-per-family/:id",
   getTotalSpeciesPerFamily
 );
+
+birdSpeciesRoutes.get("/search", getBirdSpeciesByNameHandler);
 
 birdSpeciesRoutes.get("/:familyId", getListBirdSpeciesHandler);
 birdSpeciesRoutes.get("/detail/:id", getBirdSpeciesByIdHandler);

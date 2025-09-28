@@ -8,6 +8,7 @@ import {
   getTotalSpeciesPerFamilyId,
   totalSpecies,
   updateBirdSpecies,
+  getBirdSpeciesByName,
 } from "../service/birdSpecies.service";
 import catchErrors from "../utils/catchErrors";
 import { deleteAllBirdImages } from "../service/birdImage.service";
@@ -96,3 +97,9 @@ export const getTotalSpeciesPerFamily = catchErrors(async (req, res) => {
   const response = await getTotalSpeciesPerFamilyId(id);
   return res.status(200).json(response);
 });
+
+export const getBirdSpeciesByNameHandler = catchErrors(async (req, res) => {
+  const name = z.string().parse(req.query.name)
+  const response = await getBirdSpeciesByName(name)
+  return res.status(200).json(response)
+})

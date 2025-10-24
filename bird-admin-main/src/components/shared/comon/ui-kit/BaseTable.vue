@@ -102,7 +102,7 @@ const emit = defineEmits(['edit', 'delete', 'view-child', 'view-detail']);
 }
 
 .styled-table tr:hover {
-  background-color: #e0f7e4;
+  background-color: #AED8FF66;
   cursor: pointer;
 }
 

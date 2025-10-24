@@ -10,7 +10,7 @@ const selectNotify = ref<string>('All Notifications');
   <!-- ---------------------------------------------- -->
   <!-- notifications DD -->
   <!-- ---------------------------------------------- -->
-  <div class="pa-4">
+  <!-- <div class="pa-4">
     <div class="d-flex align-center justify-space-between mb-3">
       <h6 class="text-subtitle-1">
         All Notifications
@@ -120,5 +120,5 @@ const selectNotify = ref<string>('All Notifications');
   <v-divider></v-divider>
   <div class="pa-2 text-center">
     <v-btn color="primary" variant="text">View All</v-btn>
-  </div>
+  </div> -->
 </template>

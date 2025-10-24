@@ -140,7 +140,7 @@ const emit = defineEmits(['edit', 'delete', 'view-child', 'view-detail']);
 }
 
 .edit-btn:hover {
-  background-color: #0D8AE3;
+  background-color: #9ed029;
   color: white;
 }
 
@@ -150,7 +150,7 @@ const emit = defineEmits(['edit', 'delete', 'view-child', 'view-detail']);
 }
 
 .view-btn:hover {
-  background-color: #2980b9;
+  background-color: #0D8AE3;
   color: white;
 }
 

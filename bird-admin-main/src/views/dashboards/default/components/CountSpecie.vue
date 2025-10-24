@@ -30,10 +30,10 @@ onMounted(async () => {
           <img :src="iconCard" width="25" />
         </v-btn>
       </div> -->
-      <h2 class="text-h1 font-weight-medium">
-        {{ specieCount !== null ? `${specieCount}` : 'Loading...' }}  <a href="#"><img src="/src/assets/images/icons/svg/specie.svg"/> </a>
+      <h2 class="text-h1 font-weight-medium" style="color: #FFF !important;">
+        {{ specieCount !== null ? `${specieCount}` : 'Loading...' }}  <a href="#"><img src="/src/assets/images/icons/svg/order.svg"/> </a>
       </h2>
-      <span class="text-subtitle-1 text-medium-emphasis">Total Species</span>
+      <span class="text-subtitle-1" style="color: #FFF;">Total Species</span>
       <!-- <BinaryTree2Icon stroke-width="1.5" width="28" class="text-black" /> -->
     </v-card-text>
   </v-card>

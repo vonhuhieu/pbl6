@@ -42,19 +42,6 @@ const chartData = ref<{
     }
   ]
 });
-// chartData.value = {
-//   labels: ['Species A', 'Species B', 'Species C'],
-//   datasets: [
-//     {
-//       label: 'Number of Images',
-//       backgroundColor: 'rgba(75, 192, 192, 0.7)',
-//       borderColor: 'rgba(75, 192, 192, 1)',
-//       borderWidth: 1,
-//       data: [10, 20, 30]
-//     }
-//   ]
-// };
-
 
 const chartOptions = {
   responsive: true,

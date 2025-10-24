@@ -91,7 +91,7 @@ input {
 
 /* Button styling */
 button {
-  background-color: #4CAF50;
+  background-color: #0D8AE3;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -99,12 +99,7 @@ button {
   cursor: pointer;
   font-family: 'Poppins', sans-serif;
 }
-/* 
-button:hover {
-  background-color: #45a049;
-} */
 
-/* Close button styling */
 .close-button {
   position: absolute;
   top: 10px;

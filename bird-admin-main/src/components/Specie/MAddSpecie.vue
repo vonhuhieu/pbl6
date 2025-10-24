@@ -129,7 +129,7 @@ input {
 /* Button styling */
 button {
   align-items: center;
-  background-color: #4caf50;
+  background-color: #0D8AE3;
   color: white;
   border: none;
   padding: 5px 10px;

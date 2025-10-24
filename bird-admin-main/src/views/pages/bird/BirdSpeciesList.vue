@@ -176,7 +176,7 @@ textarea {
   margin-top: 10px;
 }
 .inst-btn {
-  background-color: #4CAF50;
+  background-color: #0D8AE3;
   color: #fff;
   border-radius: 8px;
   padding: 10px 20px;

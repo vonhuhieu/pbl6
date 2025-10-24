@@ -94,18 +94,14 @@
   }
   
   button {
-    background-color: #4CAF50;
+    background-color: #0D8AE3;
     color: white;
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
   }
-/*   
-  button:hover {
-    background-color: #45a049;
-  }
-   */
+
   .close-button {
     position: absolute;
     top: 10px;

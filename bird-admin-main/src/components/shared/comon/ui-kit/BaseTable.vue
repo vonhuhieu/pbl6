@@ -86,7 +86,7 @@ const emit = defineEmits(['edit', 'delete', 'view-child', 'view-detail']);
 }
 
 .styled-table th {
-  background-color: #4caf50;
+  background-color: #0D8AE3;
   color: white;
   font-weight: bold;
   border-top-left-radius: 12px;
@@ -140,7 +140,7 @@ const emit = defineEmits(['edit', 'delete', 'view-child', 'view-detail']);
 }
 
 .edit-btn:hover {
-  background-color: #4caf50;
+  background-color: #0D8AE3;
   color: white;
 }
 

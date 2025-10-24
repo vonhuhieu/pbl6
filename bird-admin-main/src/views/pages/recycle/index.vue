@@ -126,7 +126,7 @@
     padding: 8px 12px;
     border: none;
     border-radius: 4px;
-    background-color: #4CAF50;
+    background-color: #0D8AE3;
     color: white;
     cursor: pointer;
     transition: background-color 0.2s;

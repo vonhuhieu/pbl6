@@ -18,7 +18,7 @@ const openModal = () => {
 
 <style scoped>
 .styled-button {
-  background-color: #4CAF50; /* Green background */
+  background-color: #0D8AE3; /* Green background */
   color: white; /* White text */
   border: none; /* Remove border */
   padding: 10px 20px; /* Padding */

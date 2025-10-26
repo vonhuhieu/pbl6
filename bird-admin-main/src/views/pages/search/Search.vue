@@ -56,7 +56,7 @@ async function onSubmit() {
     formData.append('file', file.value)
 
     const response = await axios.post(
-      'https://apiflask.dinlaan.site/upload',
+      'http://127.0.0.1:2205/upload',
       formData,
       { headers: { 'Content-Type': 'multipart/form-data' } }
     )

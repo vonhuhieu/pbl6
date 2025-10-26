@@ -39,8 +39,14 @@ export const createBirdSpecies = async (
 };
 
 export const getBirdSpeciesById = async (id: string) => {
-  const birdSpecies = await birdSpeciesRepository.findOneBy({ id });
-  console.log("birdSpecies123124", birdSpecies);
+  const birdSpecies = await birdSpeciesRepository.findOne({
+    where: { id },
+    relations: {
+      birdFamily: true,
+      imageBirds: true
+    }
+  });
+
   appAssert(birdSpecies, NOT_FOUND, MessageConstant.BIRD_SPECIES_NOT_FOUND);
 
   return birdSpecies;
@@ -119,7 +125,7 @@ export const getBirdSpeciesByName = async (name: string) => {
       name: ILike(`%${name}%`),
       deletedAt: IsNull(),
     },
-    relations: ["imageBirds"],
+    relations: ["imageBirds", "birdFamily"],
   });
 
   appAssert(
@@ -129,4 +135,30 @@ export const getBirdSpeciesByName = async (name: string) => {
   );
 
   return species;
+};
+
+export const getRelatedSpeciesByName = async (name: string) => {
+  const species = await birdSpeciesRepository.findOne({
+    where: { name: ILike(`%${name}%`), deletedAt: IsNull() },
+    relations: ["birdFamily"],
+  });
+
+  appAssert(
+    species,
+    NOT_FOUND,
+    MessageConstant.BIRD_SPECIES_NOT_FOUND
+  );
+
+  const familyId = species.birdFamily?.id;
+
+  const relatedSpecies = await birdSpeciesRepository.find({
+    where: {
+      birdFamily: { id: familyId },
+      id: Not(species.id),
+      deletedAt: IsNull(),
+    },
+    relations: ["imageBirds"],
+  });
+
+  return relatedSpecies;
 };

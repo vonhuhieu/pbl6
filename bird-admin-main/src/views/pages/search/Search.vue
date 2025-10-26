@@ -10,6 +10,10 @@ const birdInfo = ref<any | null>(null)
 const loading = ref(false)
 const fileInput = ref<HTMLInputElement | null>(null)
 const pasteArea = ref<HTMLDivElement | null>(null)
+const relatedBirds = ref<any[]>([])
+const showAllImages = ref(false)
+const isFromRelated = ref(false)
+const previousState = ref<any>(null);
 
 function setPreviewFromFile(f: File) {
   file.value = f
@@ -45,6 +49,7 @@ onBeforeUnmount(() => {
 })
 
 async function onSubmit() {
+  isFromRelated.value = false
   if (!file.value) return
   loading.value = true
   resultImage.value = null
@@ -72,9 +77,16 @@ async function onSubmit() {
         { params: { name: birdName.value } }
       )
       birdInfo.value = detailRes.data[0]
+      showAllImages.value = false
+      const relatedRes = await axios.get(
+        `http://localhost:5000/bird-species/related`,
+        { params: { name: birdName.value } }
+      )
+      relatedBirds.value = relatedRes.data
     }
   } catch (err) {
     birdName.value = "Garrulax canorus"
+    showAllImages.value = false
     const detailRes = await axios.get(
       `http://localhost:5000/bird-species/search`,
       { params: { name: birdName.value } }
@@ -84,11 +96,56 @@ async function onSubmit() {
     loading.value = false
   }
 }
+
+function toggleImages() {
+  showAllImages.value = !showAllImages.value
+}
+
+async function onClickRelatedBird(item: any) {
+  try {
+    previousState.value = {
+      preview: preview.value,
+      birdInfo: birdInfo.value,
+      relatedBirds: relatedBirds.value,
+      resultImage: resultImage.value,
+      birdName: birdName.value,
+    };
+    loading.value = true
+    showAllImages.value = false
+    birdInfo.value = null
+    isFromRelated.value = true
+
+    const detailRes = await axios.get(
+      `http://localhost:5000/bird-species/detail/${item.id}`
+    )
+    birdInfo.value = detailRes.data
+
+    const relatedRes = await axios.get(
+      `http://localhost:5000/bird-species/related`,
+      { params: { name: item.name } }
+    )
+    relatedBirds.value = relatedRes.data
+
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  } finally {
+    loading.value = false
+  }
+}
+
+const goBack = () => {
+  if (!previousState.value) return;
+  preview.value = previousState.value.preview;
+  birdInfo.value = previousState.value.birdInfo;
+  relatedBirds.value = previousState.value.relatedBirds;
+  resultImage.value = previousState.value.resultImage;
+  birdName.value = previousState.value.birdName;
+
+  isFromRelated.value = false;
+};
 </script>
 
-
 <template>
-  <div class="big-box">
+  <div class="big-box" v-if="!isFromRelated">
     <div class="small-box">
       <input v-if="!preview" type="file" accept="image/*" @change="onFileChange" ref="fileInput" />
 
@@ -111,7 +168,7 @@ async function onSubmit() {
     </div>
   </div>
 
-  <div class="btn-wrap">
+  <div class="btn-wrap" v-if="!isFromRelated">
     <button class="submit-btn" @click="onSubmit" :disabled="!file || loading">
       <span v-if="!loading">Submit</span>
       <span v-else class="loader"></span>
@@ -132,6 +189,10 @@ async function onSubmit() {
     <div class="small-box">
       <div class="title-detail-info">Thông tin chi tiết</div>
       <ul class="detail-info">
+        <li class="birdFamily">
+          <span class="fieldName">Họ:</span> {{ birdInfo.bird_family.name }}
+        </li>
+
         <li class="name">
           <span class="fieldName">Tên:</span> {{ birdInfo.name }}
         </li>
@@ -174,8 +235,28 @@ async function onSubmit() {
   <div class="big-box list-images flex-direction-column" v-if="birdInfo">
     <div class="title-detail-info text-center">Một số hình ảnh khác</div>
     <div class="block-list-images">
-      <img class="image-detail-bird-info flex-1" v-for="img in birdInfo.image_birds" :key="img.id" :src="`${img.url}`" />
+      <img class="image-detail-bird-info flex-1"
+        v-for="img in showAllImages ? birdInfo.image_birds : birdInfo.image_birds.slice(0, 3)" :key="img.id"
+        :src="img.url" />
+      <button v-if="birdInfo.image_birds.length > 3" class="submit-btn margin-auto" @click="toggleImages">
+        {{ showAllImages ? "Watch less images" : "Watch more images" }}
+      </button>
     </div>
+  </div>
+
+  <div class="big-box flex-direction-column" v-if="birdInfo">
+    <div class="title-detail-info text-center">MỘT SỐ LOÀI LIÊN QUAN CÙNG HỌ {{ birdInfo.bird_family.name }}</div>
+
+    <div class="block-list-cac-loai-lien-quan">
+      <div class="related-item" v-for="item in relatedBirds" :key="item.id" @click="onClickRelatedBird(item)">
+        <img class="related-image" :src="item.imageUrl || (item.image_birds?.[0]?.url ?? '')" alt="related-bird" />
+        <div class="related-name">
+          {{ item.name }}
+        </div>
+      </div>
+    </div>
+
+    <button v-if="isFromRelated" class="submit-btn margin-auto" @click="goBack">⬅ Back</button>
   </div>
 </template>
 
@@ -317,5 +398,60 @@ async function onSubmit() {
 
 .flex-1 {
   flex: 1;
+}
+
+.block-list-cac-loai-lien-quan {
+  display: flex;
+  gap: 20px;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.related-item {
+  width: calc(100% / 3 - 20px);
+  height: 450px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  transition: all 0.3s ease-in-out;
+  gap: 10px;
+}
+
+.related-item:hover {
+  cursor: pointer;
+  transform: translateY(-6px);
+  box-shadow: 0 10px 16px rgba(0, 0, 0, 0.4);
+  gap: 20px;
+}
+
+.related-image {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  border-radius: 8px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.related-item:hover .related-image {
+  transform: scale(1.05);
+}
+
+.related-name {
+  transition: color 0.3s ease-in-out;
+}
+
+.related-item:hover .related-name {
+  color: #1976d2;
+}
+
+.margin-auto {
+  margin: auto !important;
 }
 </style>

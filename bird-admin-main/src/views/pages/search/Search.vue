@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import axios from 'axios'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const file = ref<File | null>(null)
 const preview = ref<string | null>(null)
 const resultImage = ref<string | null>(null)
@@ -102,34 +104,7 @@ function toggleImages() {
 }
 
 async function onClickRelatedBird(item: any) {
-  try {
-    previousState.value = {
-      preview: preview.value,
-      birdInfo: birdInfo.value,
-      relatedBirds: relatedBirds.value,
-      resultImage: resultImage.value,
-      birdName: birdName.value,
-    };
-    loading.value = true
-    showAllImages.value = false
-    birdInfo.value = null
-    isFromRelated.value = true
-
-    const detailRes = await axios.get(
-      `http://localhost:5000/bird-species/detail/${item.id}`
-    )
-    birdInfo.value = detailRes.data
-
-    const relatedRes = await axios.get(
-      `http://localhost:5000/bird-species/related`,
-      { params: { name: item.name } }
-    )
-    relatedBirds.value = relatedRes.data
-
-    window.scrollTo({ top: 0, behavior: "smooth" })
-  } finally {
-    loading.value = false
-  }
+  router.push(`/pages/bird/${item.id}`)
 }
 
 const goBack = () => {
@@ -244,7 +219,7 @@ const goBack = () => {
     </div>
   </div>
 
-  <div class="big-box flex-direction-column" v-if="birdInfo">
+  <div class="big-box flex-direction-column" v-if="birdInfo && relatedBirds?.length">
     <div class="title-detail-info text-center">MỘT SỐ LOÀI LIÊN QUAN CÙNG HỌ {{ birdInfo.bird_family.name }}</div>
 
     <div class="block-list-cac-loai-lien-quan">
@@ -257,6 +232,10 @@ const goBack = () => {
     </div>
 
     <button v-if="isFromRelated" class="submit-btn margin-auto" @click="goBack">⬅ Back</button>
+  </div>
+
+  <div v-else-if="birdInfo" class="text-center no-related">
+    Không có loài liên quan cùng họ
   </div>
 </template>
 

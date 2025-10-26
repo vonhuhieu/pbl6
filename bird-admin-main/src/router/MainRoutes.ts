@@ -86,6 +86,12 @@ const MainRoutes = {
       name: "Search",
       path: "/pages/search",
       component: () => import("@/views/pages/search/Search.vue")
+    },
+    {
+      name: "Bird Detail",
+      path: "/pages/bird/:id",
+      component: () => import("@/views/pages/search/BirdDetail.vue"),
+      props: true
     }
   ]
 };
